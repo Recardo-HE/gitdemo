@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <link rel="stylesheet" href="./留言板.css">
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <!-- <img src="./head_pic/user1.jpg" alt="" srcset="" onClick={this.selectImg} />
+    <img src="./head_pic/user2.jpg" alt="" srcset="" onClick={this.selectImg} />
+    <img src="./head_pic/user3.jpg" alt="" srcset="" onClick={this.selectImg} />
+    <img src="./head_pic/user4.jpg" alt="" srcset="" onClick={this.selectImg} />
+    <img src="./head_pic/user5.jpg" alt="" srcset="" onClick={this.selectImg} />
+    <img src="./head_pic/user6.jpg" alt="" srcset="" onClick={this.selectImg} /> -->
+</body>
+<script type="text/babel">
+
+
+    // 子组件
+    class Foot extends React.Component {
+        state= {
+            type:0 //设置显示状态
+        }
+        // 更改状态
+        changeStateMessage = (num)=>{
+            this.state.type = num
+        }
+        render() {
+            const { data } = this.props
+            // let datalist = 
+            return (
+                <div className="content">
+                    <div className="info">
+                        <div onClick={()=>this.changeStateMessage(0)}>未读消息</div>
+                        <div onClick={()=>this.changeStateMessage(1)}>已读消息</div>
+                        <div onClick={()=>this.changeStateMessage(2)}>回收站</div>
+                    </div>
+                    {
+                        data.map((el, index) => {
+                            if(el.state == this.state.type){
+                                return <div className="msg" key={index}>
+                                <div className="file">
+                                    <img src={el.file} alt="" />
+                                    <div className="text">
+                                        <p>{el.title}:{el.content}</p>
+                                        <span>{el.date}</span>
+                                    </div>
+                                </div>
+                                <div className="btu">
+                                    <button >已读</button>
+                                </div>
+                            </div>
+                            }
+                            
+                        })
+                    }
+                </div>
+            )
+        }
+    }
+
+
+    class Vdom extends React.Component {
+        // 数据
+        state = {
+            data: [],
+            picture: [],
+            num: 30,
+        }
+        // 挂载完成后 渲染数据
+        componentDidMount() {
+            const list = [
+                { id: 1, file: './head_pic/user1.jpg', title: '静夜思', content: 'chuangiashifnlksadngk', date: 'sfhsn', state: 0 },
+                { id: 1, file: './head_pic/user5.jpg', title: '静夜思', content: 'chuangiashifnlksadngk', date: 'sf大概多少sn', state: 2 },
+            ]
+            const picture = [
+                { id: 1, img: './head_pic/user1.jpg', done: false },
+                { id: 2, img: './head_pic/user2.jpg', done: false },
+                { id: 3, img: './head_pic/user3.jpg', done: false },
+                { id: 4, img: './head_pic/user4.jpg', done: false },
+                { id: 5, img: './head_pic/user5.jpg', done: false },
+                { id: 6, img: './head_pic/user6.jpg', done: false },
+            ]
+            this.setState({
+                data: list,
+                picture: picture
+            })
+        }
+        // 添加
+        addData = () => {
+            if (this.img.src == '' || this.title.value == '') {
+                alert('请选择头像输入标题')
+                return
+            }
+            const obj = {
+                id: new Date().getTime(),
+                file: this.img.src,
+                title: this.title.value,
+                content: this.content.value,
+                date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds(),
+                stats: false
+            }
+            // console.log(obj);
+            this.setState({
+                data: [...this.state.data, obj],
+            })
+            this.img.style.border = ''
+            this.title.value = ''
+            this.content.value = ''
+        }
+        // 点击选中之后设置头像边框为红
+        selectClick = (id) => {
+            return (e) => {
+                this.img = e.target
+                this.state.picture.map(el => {
+                    el.done = false
+                    return el
+                })
+                this.setState({
+                    picture: this.state.picture.map((el) => {
+                        if (el.id == id) {
+                            el.done = !el.done
+                        }
+                        return el
+                    })
+                })
+            }
+        }
+        // 限制文字
+        completeNum = () => {
+            this.state.num = 30 - this.content.value.length
+            if (this.state.num <= 1) {
+                alert('只能输入30个字')
+                this.content.select()
+                return
+            }
+            this.setState({
+                num: this.state.num
+            })
+        }
+        // 清空留言
+        Cleardata = () => {
+            this.setState({
+                data: this.state.data.map(el => {
+                    el.state = 2
+                    return el
+                })
+            })
+        }
+        render() {
+            const { data, picture } = this.state
+            return (
+                <div>
+                    <div className="head">
+                        <div className="file" >
+                            <span>头像:</span>
+                            <a href="" style={{ display: 'none' }}>aujsb jse</a>
+                            <div className="img">
+                                {
+                                    picture.map((el, index) => {
+                                        return <div><img src={el.img} onClick={this.selectClick(el.id)} style={el.done ? { border: '2px solid red' } : { border: '2px solid #ffffff' }} /></div>
+                                    })
+                                }
+                            </div>
+                        </div>
+
+                        <div className="file">
+                            <span>标题:</span>
+                            <div className="input">
+                                <input type="text" placeholder="输入标题名称" onBlur={(e) => { this.title = e.target }} />
+                            </div>
+                        </div>
+
+                        <div className="file">
+                            <span>内容:</span>
+                            <div className="textarea">
+                                <textarea cols="40" rows="5" placeholder="输入留言内容" ref={e => this.content = e} onChange={() => { this.completeNum() }} maxLength={32}></textarea>
+                                <div>你还可以输入{this.state.num}个字</div>
+                            </div>
+                        </div>
+                        <div className="sub">
+                            <div className="file">
+                                <button onClick={() => (this.addData())}>添加留言</button>
+                                <div className="clear" onClick={this.Cleardata}>清空留言</div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <Foot data={data} />
+                </div>
+            )
+        }
+    }
+    const app = ReactDOM.createRoot(document.getElementById('app'))
+    app.render(<Vdom />)
+</script>
+
+</html>
